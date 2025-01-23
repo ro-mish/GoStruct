@@ -53,5 +53,57 @@ func main() {
 		return
 	}
 
+	// Close the file after we're done with it (this is async)
+	defer jsonlFile.Close()
 
+	// This assumes first line is csv header
+	headers := records[0]
+
+	// Go through records and make json map for each record
+	for _, record := range records[1:] {
+		// Creates map using built-in make
+		jsonMap := make(map[string]interface{})
+
+
+		for i, value := range record {
+			jsonMap[headers[i]] = parseValue(value)
+		}
+
+		// Marshal the json map to json
+		jsonData, err := json.Marshal(jsonMap)
+		if err != nil {
+			fmt.Println("Error marshaling JSON:", err)
+			return
+		}
+		
+		// Write the json data to the jsonl file
+		_, err = jsonlFile.Write(jsonData)
+		if err != nil {
+			fmt.Println("Error writing to JSONL file:", err)
+			return
+		}
+
+		// Write a newline character to the end of each record
+		jsonlFile.WriteString("\n")
+	}
+
+	fmt.Printf("CSV data successfully written to %s\n", outputFilePath)
+}
+
+func parseValue(value string) interface{} {
+	var intValue int
+	var floatValue float64
+	var err error
+
+	intValue, err = strconv.Atoi(value)
+	if err == nil {
+		return intValue
+	}
+
+	floatValue, err = strconv.ParseFloat(value, 64)
+	if err == nil {
+		return floatValue
+	}
+
+	return value
 }
