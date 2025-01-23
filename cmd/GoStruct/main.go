@@ -5,7 +5,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
-	"strconv"
+
+	"github.com/ro-mish/GoStruct/pkg/utils"
 )
 
 func main() {
@@ -21,7 +22,7 @@ func main() {
 	outputFilePath := os.Args[2]
 
 	// Open the input file
-	// Set csv file 
+	// Set csv file
 	csvFile, err := os.Open(inputFilePath)
 
 	// Check if error exists from opening file
@@ -64,18 +65,17 @@ func main() {
 		// Creates map using built-in make
 		jsonMap := make(map[string]interface{})
 
-
 		for i, value := range record {
-			jsonMap[headers[i]] = parseValue(value)
+			jsonMap[headers[i]] = utils.ParseValue(value)
 		}
 
-		// Marshal the json map to json
+		// Marshal the json map to json (kind of like json.dumps() in python)
 		jsonData, err := json.Marshal(jsonMap)
 		if err != nil {
 			fmt.Println("Error marshaling JSON:", err)
 			return
 		}
-		
+
 		// Write the json data to the jsonl file
 		_, err = jsonlFile.Write(jsonData)
 		if err != nil {
@@ -88,22 +88,4 @@ func main() {
 	}
 
 	fmt.Printf("CSV data successfully written to %s\n", outputFilePath)
-}
-
-func parseValue(value string) interface{} {
-	var intValue int
-	var floatValue float64
-	var err error
-
-	intValue, err = strconv.Atoi(value)
-	if err == nil {
-		return intValue
-	}
-
-	floatValue, err = strconv.ParseFloat(value, 64)
-	if err == nil {
-		return floatValue
-	}
-
-	return value
 }
