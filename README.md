@@ -61,3 +61,13 @@ This will run all the unit tests in the `tests` directory.
 ### License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+
+### Use of AI Assistants
+- I used gpt (o1) to explain to me key concepts in go in relationship to python
+    - I learned about how 'marshal' is similar to 'json.dumps()'
+    - Go topics like goroutines and how to set them up
+    - importing and using built-in packages in Go
+- AI was also used in the debugging process in building out the conversion logic
+    - Helped me find errors and resolve them when needed
+    - Identified best practices when writing the code as well
